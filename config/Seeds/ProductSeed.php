@@ -15,7 +15,7 @@ class ProductSeed extends AbstractSeed
      */
     public function run()
     {
-
+        $this->execute('TRUNCATE TABLE products');
         $data = [
             [
             'name' => 'Tomato',

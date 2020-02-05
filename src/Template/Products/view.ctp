@@ -74,4 +74,31 @@
         </table>
         <?php endif; ?>
     </div>
+    <div class="related">
+        <h4><?= __('Related Products') ?></h4>
+        <?php if (!empty($product->product_ratings)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th scope="col"><?= __('Id') ?></th>
+                <th scope="col"><?= __('Product Id') ?></th>
+                <th scope="col"><?= __('Score') ?></th>
+                <th scope="col"><?= __('Created') ?></th>
+                <th scope="col" class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($product->product_ratings as $productRatings): ?>
+            <tr>
+                <td><?= h($productRatings->id) ?></td>
+                <td><?= h($productRatings->product_id) ?></td>
+                <td><?= h($productRatings->score) ?></td>
+                <td><?= h($productRatings->created) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'ProductRatings', 'action' => 'view', $productRatings->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'ProductRatings', 'action' => 'edit', $productRatings->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'ProductRatings', 'action' => 'delete', $productRatings->id], ['confirm' => __('Are you sure you want to delete # {0}?', $productRatings->id)]) ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
+    </div>
 </div>
