@@ -76,7 +76,7 @@
     </div>
     <div class="related">
         <h4><?= __('Related Products') ?></h4>
-        <?php if (!empty($product->product_ratings)): ?>
+        <?php if (!empty($relatedProducts)): ?>
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th scope="col"><?= __('Id') ?></th>
@@ -85,16 +85,16 @@
                 <th scope="col"><?= __('Created') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
-            <?php foreach ($product->product_ratings as $productRatings): ?>
+            <?php foreach ($relatedProducts as $relatedProduct): ?>
             <tr>
-                <td><?= h($productRatings->id) ?></td>
-                <td><?= h($productRatings->product_id) ?></td>
-                <td><?= h($productRatings->score) ?></td>
-                <td><?= h($productRatings->created) ?></td>
+                <td><?= h($relatedProduct->id) ?></td>
+                <td><?= h($relatedProduct->name) ?></td>
+                <td><?= h($relatedProduct->description) ?></td>
+                <td><?= h($relatedProduct->created) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'ProductRatings', 'action' => 'view', $productRatings->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'ProductRatings', 'action' => 'edit', $productRatings->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'ProductRatings', 'action' => 'delete', $productRatings->id], ['confirm' => __('Are you sure you want to delete # {0}?', $productRatings->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['controller' => 'Products', 'action' => 'view', $relatedProduct->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Products', 'action' => 'edit', $relatedProduct->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Products', 'action' => 'delete', $relatedProduct->id], ['confirm' => __('Are you sure you want to delete # {0}?', $relatedProduct->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
