@@ -1,5 +1,28 @@
-# ArcaPay assignment
+# Product Shop(Task 2)
+
+Web App made with CakePHP. Consists of products listing, products ratings, ability to export products in XML, ability to import from [remote json](https://raw.githubusercontent.com/wedeploy-examples/supermarket-web-example/master/products.json) , and method which gets related products.
+
+## Installation
+
+App works good on XAMPP, you need to create database in localhost(name 'shop'). Recommended to install CakePHP for database seeding. [CakePHP](https://book.cakephp.org/3.next/en/installation.html)
 
 
-* Web application contains 2 assignments in app root page
-* Note: Project runs well on WAMP or XAMP
+## Usage
+
+```php
+/products
+returns list of Products
+
+/products/exportxml
+returns text/xml of Products list
+
+Method "importjson()"  in ProductControler
+imports data from remote json, returns index view(/products)
+
+Method "getRelatedProducts()"  in ProductControler 
+Selects products which are related to opened product in view
+```
+
+
+### Tools
+Visual Studio Code, Git, CakePHP, Phinx, XAMPP
