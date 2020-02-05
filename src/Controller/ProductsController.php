@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
-
+use Cake\Utility\Xml;
+use SimpleXMLElement;
 use App\Controller\AppController;
 
 /**
@@ -104,15 +105,39 @@ class ProductsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    
     /**
      * 
      */
     public function exportxml()
     {
         $products = $this->paginate($this->Products);
+        $productJson=json_encode($products, JSON_PRETTY_PRINT);
+        $productArray = json_decode($productJson, true);
+        $xml=$this->array2xml($productArray,false);
+        return $this->response->withType('text/xml')->withStringBody($xml);
        
-       // $xmlObject = Xml::fromArray($this->Products);
-        //$xmlString = $xmlObject->asXML();
-        dd($products);
     }
+
+    function array2xml($array, $xml = false){
+
+        if($xml === false){
+            $xml = new SimpleXMLElement('<products/>');
+        }
+     
+        foreach($array as $key => $value){
+            if(is_array($value)){
+                $this->array2xml($value, $xml->addChild(is_numeric((string) $key)?("n".$key):$key));
+            } else {
+                $xml->addChild(is_numeric((string) $key)?("n".$key):$key, $value);
+            }
+        }
+     
+        return $xml->asXML();
+     }
+
+
+
+
+    
 }
