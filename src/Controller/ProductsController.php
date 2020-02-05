@@ -3,6 +3,8 @@ namespace App\Controller;
 use Cake\Utility\Xml;
 use SimpleXMLElement;
 use App\Controller\AppController;
+use Cake\Http\Client;
+use Cake\I18n\Time;
 
 /**
  * Products Controller
@@ -51,6 +53,7 @@ class ProductsController extends AppController
         $product = $this->Products->newEntity();
         if ($this->request->is('post')) {
             $product = $this->Products->patchEntity($product, $this->request->getData());
+            
             if ($this->Products->save($product)) {
                 $this->Flash->success(__('The product has been saved.'));
 
@@ -135,6 +138,35 @@ class ProductsController extends AppController
      
         return $xml->asXML();
      }
+
+    public function importjson(){
+        $http = new Client();
+
+        $response = $http->get('https://raw.githubusercontent.com/wedeploy-examples/supermarket-web-example/master/products.json');
+        $json = $response->json;
+
+        foreach($json as $item) { 
+            $this->Products->save($this->filterJson($item));
+        }
+        $this->Flash->success(__('Products has been imported.'));
+
+        return $this->redirect(['action' => 'index']);
+
+    }
+    protected function filterJson($json){
+       
+        $time = Time::now();
+        $time=$time->i18nFormat('yyyy-MM-dd HH:mm:ss');
+        $product = $this->Products->newEntity();
+        $product['name']=$json['title'];
+        $product['price']=$json['price'];
+        $product['description']=$json['description'];
+        $product['photo']=$json['filename'];
+        $product['created']=$time;
+        $product['modified']=$time;
+        return $product;
+
+    }
 
 
 
