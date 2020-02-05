@@ -4,7 +4,7 @@ Web App made with CakePHP. Consists of products listing, products ratings, abili
 
 ## Installation
 
-App works good on XAMPP, you need to create database in localhost(name 'shop'). Recommended to install CakePHP for database seeding. [CakePHP](https://book.cakephp.org/3.next/en/installation.html). If CakePHP is installed: use these commands to seed database.
+App works good on XAMPP, you need to create database in localhost(name 'shop'). Recommended to install CakePHP for database seeding. [CakePHP](https://book.cakephp.org/3.next/en/installation.html). If CakePHP is installed: use these commands to seed database. Or you can use database dumb, it will be included in repository.
 ```unix
 "vendor/bin/phinx.bat" seedrun -e development -s ProductSeed
 "vendor/bin/phinx.bat" seedrun -e development -s ProductRatingsSeed
