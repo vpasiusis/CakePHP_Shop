@@ -39,8 +39,66 @@ class ProductsController extends AppController
         $product = $this->Products->get($id, [
             'contain' => ['ProductRatings']
         ]);
-
-        $this->set('product', $product);
+        
+        $allProducts =$this->Products ->find()->where(['id !=' => $id])->toList();
+        $relatedProducts=$this->getRelatedProducts($allProducts,$product['name'],$product['description']);
+        
+        $this->set(compact('product','relatedProducts'));
+    }
+    /**
+     * Method divides string into words and removes words which are shorter then 4 symbols 
+     *
+     * @param  String $string  Description or name string
+     *
+     * @return  stringsArray   divided words       
+     */
+    protected function divideString($string){
+        $string=preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+        $array = explode(" ", $string);
+        $arraydiff=array();
+        foreach($array as $words){
+            if(strlen($words)<4){
+                array_push($arraydiff,$words);
+            }
+        }
+        $array = array_diff($array,$arraydiff);
+        return $array;
+    }
+    /**
+     * Selects only related products to currently opened
+     *
+     * @param   Products  $productsList  Product list without opened one
+     * @param   String  $name          Opened product name
+     * @param   String  $description   Opened product description
+     *
+     * @return  Array                 returns array related to opened product, or empty array
+     */
+    protected function getRelatedProducts($productsList,$name,$description){
+        $nameArray=$this->divideString($name);
+        $descriptionArray=$this->divideString($description);
+        $relatedProducts=array();
+        $related=FALSE;
+        foreach($productsList as $product){
+            foreach($nameArray as $name){
+                if(strpos($product['name'],$name)){
+                    array_push($relatedProducts,$product);
+                    $related=TRUE;
+                break;
+                }
+            }
+            if(!$related){
+                foreach($descriptionArray as $descriptionWord ){
+                    if(strpos($product['description'],$descriptionWord)){
+                        array_push($relatedProducts,$product);
+                        $related=TRUE;
+                    break;
+                    }
+                }
+            }
+            $related=FALSE;
+            
+        }
+        return $relatedProducts;
     }
 
     /**
@@ -110,7 +168,9 @@ class ProductsController extends AppController
 
     
     /**
-     * 
+     * Exports all products in XML
+     *
+     * @return  text/xml  opens new page with xml
      */
     public function exportxml()
     {
@@ -121,7 +181,14 @@ class ProductsController extends AppController
         return $this->response->withType('text/xml')->withStringBody($xml);
        
     }
-
+    /**
+     * Converts array to new XML
+     *
+     * @param  Products $array  products array
+     * @param   $xml    new XML
+     *
+     * @return  reurns XML
+     */
     function array2xml($array, $xml = false){
 
         if($xml === false){
@@ -138,7 +205,11 @@ class ProductsController extends AppController
      
         return $xml->asXML();
      }
-
+    /**
+     * Gets remote json data, and data to database
+     *
+     * @return  redirection to /index
+     */
     public function importjson(){
         $http = new Client();
 
@@ -153,6 +224,13 @@ class ProductsController extends AppController
         return $this->redirect(['action' => 'index']);
 
     }
+    /**
+     * Filters json object to Product entity
+     *
+     * @param Json  $json  data of object
+     *
+     * @return  returns new Product entity
+     */
     protected function filterJson($json){
        
         $time = Time::now();
